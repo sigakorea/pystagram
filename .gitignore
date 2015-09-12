@@ -1,0 +1,6 @@
+*.pyc
+db.sqlite3
+**/media/
+**/uploads/
+/.idea
+/static_deploy

@@ -1,0 +1,77 @@
+{% extends "blog/layout.html" %}
+{% load bootstrap3 thumbnail %}
+{% load my_tags %}
+
+{% block extra_head %}
+<!-- 참고 : http://tobyyun.tumblr.com/post/55858430437/css%EB%A5%BC-%ED%86%B5%ED%95%9C-%EB%A9%80%ED%8B%B0%EB%9D%BC%EC%9D%B8-%EB%A7%90%EC%A4%84%EC%9E%84-%EC%B2%98%EB%A6%AC%EC%99%80-%ED%8F%B4%EB%B0%B1 -->
+<style>
+.thumbnail .caption h5 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    word-wrap: break-wrap;
+}
+.thumbnail .caption {
+    height: 50px;
+}
+</style>
+
+<title>Pystagram</title>
+{% endblock %}
+
+{% block navbar_left %}
+    <li><a><span class="label label-info">{{ count }}</span></a></li>
+{% endblock %}
+
+{% block content %}
+
+<div>
+    <p>
+        {% url "blog.views.detail" post.pk as post_url %}
+
+        GA 붙인 URL : {{post_url|ga_url:"source=facebook&medium=personalpage&campaign=python"}}
+    </p>
+</div>
+
+<div class="container">
+    <div class="row">
+        {% for post in post_list %}
+            <div class="col-xs-6 col-sm-4 col-md-3">
+                <div class="thumbnail">
+                    <a href='{% url "blog:detail" post.pk %}'>
+
+                        {% if not post.photo %}
+                            <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" width="400" height="400" class="img-rounded" />
+                        {% else %}
+                            {% thumbnail post.photo "400x400" crop="center" as im %}
+                                <img src="{{ im.url }}" width="400" height="400" class="img-rounded" />
+                            {% endthumbnail %}
+                        {% endif %}
+
+                        <!--{% if post.photo %}-->
+                            <!--&lt;!&ndash;<img src="{{ post.photo.url }}" class="img-rounded">&ndash;&gt;-->
+                            <!--{% thumbnail post.photo "400x400" crop="center" as im %}-->
+                                <!--<img src="{{ im.url }}" width="400" height="400" class="img-rounded">-->
+                            <!--{% endthumbnail %}-->
+                            <!--{% thumbnail post.photo "800x800" crop="center" as im %}-->
+                                <!--<img src="{{ im.url }}" width="400" height="400" class="img-rounded">-->
+                            <!--{% endthumbnail %}-->
+                        <!--{% endif %}-->
+
+                        <!--<img src="http://lorempixel.com/400/400/{{ lorempixel_categories|random }}/" class="img-rounded" />-->
+                        <div class="caption">
+                            <h5>{{ post.title }}</h5>
+                        </div>
+                    </a>
+                    <a href='{% url "blog:detail" post.uuid.hex %}'>by uuid</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="row text-center">
+        {% bootstrap_pagination page_obj %}
+    </div>
+</div>
+{% endblock %}

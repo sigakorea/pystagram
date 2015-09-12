@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}
+
+{% block title %}사진들{% endblock %}
+
+{% block content %}
+
+    {% if request.last_post %}
+        <p>
+            마지막 사진 PK : {{ request.last_post.pk }}
+        </p>
+
+    {% else %}
+
+    <p>마지막 사진이 없음요.</p>
+
+    {% endif %}
+
+    <p>사진들</p>
+    {% for photo in photos %}
+    <p><img src="{{photo.image_file.url}}" /></p>
+    {% endfor %}
+
+{% endblock %}

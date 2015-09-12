@@ -1,0 +1,46 @@
+{% extends "blog/layout.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    {{ post.title }}
+                </div>
+                <div class="panel-body">
+                    {{ post.content|linebreaks }}
+
+                    {% if post.photo %}
+                        <p class="text-center">
+                            <img src="{{ post.photo.url }}" alt="">
+                        </p>
+                    {% endif %}
+
+                    {% if post.lnglat %}
+                        <hr>
+                        <p class="text-center">
+                            <img src="https://maps.googleapis.com/maps/api/staticmap?center={{ post.lat }},{{ post.lng }}&zoom=13&size=600x300&maptype=roadmap&markers=color:red%7Clabel:C%7C{{ post.lat }},{{ post.lng }}" width="300" height="150">
+                        </p>
+                    {% endif %}
+
+                </div>
+            </div>
+
+            <ul>
+                {% for comment in post.comment_set.all %}
+                    <li>
+                        {{ comment.content }}
+                        <a href="{% url "blog:comment_edit" post.pk comment.pk %}">Edit</a>
+                        <a href="{% url "blog:comment_delete" post.pk comment.pk %}">Delete</a>
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <a href="{% url "blog:index" %}" class="btn btn-default">글목록</a>
+            <a href="{% url "blog:edit" post.pk %}" class="btn btn-info">수정</a>
+            <a href="{% url "blog:comment_new" post.pk %}" class="btn btn-success">새 댓글</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
